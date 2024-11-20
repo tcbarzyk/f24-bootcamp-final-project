@@ -15,7 +15,6 @@ class UserService {
         do {
             let response = try JSONDecoder().decode(User.self, from: data)
             let user = response
-            //print(user)
             return user
         } catch {
             print("Failed to decode JSON: \(error)")

@@ -64,26 +64,39 @@ struct ContentView: View {
                                     .shadow(radius: 5)
                                     .font(.title3)
                             }
+                            Button(action: {
+                                appState.logout()
+                            }) {
+                                Text("Logout")
+                                    .padding()
+                                    .foregroundStyle(Color.textColor)
+                                    .bold()
+                                    .frame(maxWidth: 150)
+                                    .background(Color.accent)
+                                    .cornerRadius(10)
+                                    .foregroundColor(.white)
+                                    .shadow(radius: 5)
+                                    .font(.title3)
+                            }
                         }
                     }
                     else if (appState.isLoggedIn && isLoadingUser) {
                         ProgressView("Loading User...")
-                        .padding()
+                            .padding()
                     }
                     else {
                         Text("You are not currently logged in")
                             .font(.system(size: 20, weight: .bold))
                             .foregroundColor(.white)
-                        // If not logged in, show the LoginView
                         NavigationLink(value: "Login") {
                             Text("Go to Login")
                                 .padding()
                                 .foregroundStyle(Color.textColor)
                                 .bold()
                                 .frame(maxWidth: 150)
-                                .background(Color.accent) // Add background color
-                                .cornerRadius(10) // Rounded corners
-                                .foregroundColor(.white) // White text color
+                                .background(Color.accent)
+                                .cornerRadius(10)
+                                .foregroundColor(.white)
                                 .shadow(radius: 5)
                                 .font(.title3)
                         }
@@ -107,11 +120,11 @@ struct ContentView: View {
                 }
             }
         }
-        .onChange(of: appState.isLoggedIn) { isLoggedIn in
-            if !isLoggedIn {
+        .onChange(of: appState.isLoggedIn) {
+            if !appState.isLoggedIn {
                 user = nil
             }
-            if isLoggedIn {
+            if appState.isLoggedIn {
                 Task {
                     await fetchUser()
                 }
@@ -148,25 +161,20 @@ struct ContentView: View {
     }
     
     func decodeJWT(_ jwt: String) -> [String: Any]? {
-        // Split the JWT into parts
         let segments = jwt.split(separator: ".")
         guard segments.count == 3 else {
             print("Invalid JWT format")
             return nil
         }
         
-        // Decode the payload (the second part)
         let payloadSegment = segments[1]
         
-        // Base64-decode the payload segment
         var base64String = String(payloadSegment)
         
-        // JWT uses Base64URL encoding, which replaces "+" and "/" with "-" and "_", and may lack padding
         base64String = base64String
             .replacingOccurrences(of: "-", with: "+")
             .replacingOccurrences(of: "_", with: "/")
         
-        // Pad the string to a multiple of 4 if needed
         while base64String.count % 4 != 0 {
             base64String.append("=")
         }
@@ -176,7 +184,6 @@ struct ContentView: View {
             return nil
         }
         
-        // Parse the JSON from the decoded payload
         do {
             let jsonObject = try JSONSerialization.jsonObject(with: payloadData, options: [])
             return jsonObject as? [String: Any]

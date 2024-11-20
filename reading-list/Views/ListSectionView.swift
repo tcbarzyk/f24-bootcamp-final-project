@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CachedAsyncImage
 
 struct ListSectionView: View {
     @Binding var books: [UserBook]
@@ -68,7 +69,7 @@ struct EditView: View {
             HStack(alignment: .top) {
                 Group {
                     if book.bookInfo.coverKey != "", let coverURL = URL(string: "\(baseURL)\(book.bookInfo.coverKey)-M.jpg") {
-                        AsyncImage(url: coverURL) { image in
+                        CachedAsyncImage(url: coverURL) { image in
                             image.resizable()
                         } placeholder: {
                             Color.gray
@@ -157,12 +158,12 @@ struct EditView: View {
             Text(editStatus)
         }
         .onAppear {
-            // Initialize state with current book values
+            
             notes = book.userInfo.notes
             selectedStatus = book.userInfo.status
         }
-        .onChange(of: editBookSuccess) { success in
-            if success {
+        .onChange(of: editBookSuccess) {
+            if editBookSuccess {
                 isPresented = false
             }
         }
@@ -174,9 +175,8 @@ struct EditView: View {
         isLoading = true
         do {
             if let token = KeychainHelper.shared.retrieve(forKey: "jwtToken") {
-                // Save changes to the book
-                try await bookListService.editBook(token: token, id: book.id, notes: notes, status: selectedStatus)
-                try await refreshUser()
+                let _ = try await bookListService.editBook(token: token, id: book.id, notes: notes, status: selectedStatus)
+                await refreshUser()
             }
             editBookSuccess = true
             isLoading = false
@@ -193,9 +193,8 @@ struct EditView: View {
         isLoading = true
         do {
             if let token = KeychainHelper.shared.retrieve(forKey: "jwtToken") {
-                // Save changes to the book
-                try await bookListService.deleteBook(token: token, id: book.id)
-                try await refreshUser()
+                let _ = try await bookListService.deleteBook(token: token, id: book.id)
+                await refreshUser()
             }
             editBookSuccess = true
             isLoading = false

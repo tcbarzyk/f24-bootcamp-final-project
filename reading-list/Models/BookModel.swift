@@ -1,6 +1,6 @@
 //
 //  BookModel.swift
-//  reading-list 
+//  reading-list
 //
 //  Created by Teddy Barzyk on 11/11/24.
 //

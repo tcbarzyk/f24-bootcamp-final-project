@@ -12,10 +12,8 @@ class BookSearchService {
         
         let (data, _) = try await URLSession.shared.data(from: url)
         do {
-            // Decode to SearchResponse, then access the docs array
             let response = try JSONDecoder().decode(SearchResponse.self, from: data)
             let books = response.docs
-            //print(books) // Array of Book instances populated with JSON data
             return books
         } catch {
             print("Failed to decode JSON: \(error)")

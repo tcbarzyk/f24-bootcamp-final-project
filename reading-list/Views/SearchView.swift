@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CachedAsyncImage
 
 struct SearchView: View {
     @StateObject private var viewModel = SearchViewModel()
@@ -39,7 +40,7 @@ struct SearchView: View {
                 .padding(15)
                 if isLoading {
                     ProgressView("Searching...")
-                    .padding()
+                        .padding()
                 } else {
                     ScrollView {
                         LazyVStack (spacing: 15) {
@@ -48,7 +49,7 @@ struct SearchView: View {
                                 BookView(book: book, alreadyAdded: alreadyAdded, onTap: {
                                     bookToAdd = book
                                     addingBook = true
-                            })
+                                })
                             }
                         }
                     }
@@ -95,7 +96,7 @@ struct AddView: View {
             HStack (alignment: .top) {
                 Group {
                     if let coverKey = book.coverKey, let coverURL = URL(string: "\(baseURL)\(coverKey)-M.jpg") {
-                        AsyncImage(url: coverURL) { image in
+                        CachedAsyncImage(url: coverURL) { image in
                             image.resizable()
                         } placeholder: {
                             Color.gray
@@ -123,44 +124,44 @@ struct AddView: View {
                 }
             }
             .padding(.horizontal, 10)
-                TextField("Enter notes", text: $notes)
-                    .padding()
-                    .background(Color.gray.opacity(0.2))
-                    .cornerRadius(8)
-                    .frame(height: 100)
-                    .padding([.leading, .trailing])
-                
-                Picker("Book Status", selection: $selectedStatus) {
-                    ForEach(statuses, id: \.self) { status in
-                        Text(status).tag(status)
-                    }
-                }
-                .pickerStyle(SegmentedPickerStyle())
+            TextField("Enter notes", text: $notes)
+                .padding()
+                .background(Color.gray.opacity(0.2))
+                .cornerRadius(8)
+                .frame(height: 100)
                 .padding([.leading, .trailing])
-                
-                Button(action: {
-                    Task {
-                        await onAddBook()
-                    }
-                }) {
-                    Text("Add Book")
-                        .font(.system(size: 18, weight: .bold))
-                        .frame(maxWidth: .infinity, maxHeight: 50)
-                        .background(Color.accentColor)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                        .padding([.leading, .trailing, .top])
+            
+            Picker("Book Status", selection: $selectedStatus) {
+                ForEach(statuses, id: \.self) { status in
+                    Text(status).tag(status)
                 }
-                .disabled(isLoading)
-                Text(addStatus)
             }
-            .onChange(of: addBookSuccess) { success in
-                    if success {
-                        isPresented = false
-                    }
+            .pickerStyle(SegmentedPickerStyle())
+            .padding([.leading, .trailing])
+            
+            Button(action: {
+                Task {
+                    await onAddBook()
                 }
-            Spacer()
+            }) {
+                Text("Add Book")
+                    .font(.system(size: 18, weight: .bold))
+                    .frame(maxWidth: .infinity, maxHeight: 50)
+                    .background(Color.accentColor)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+                    .padding([.leading, .trailing, .top])
+            }
+            .disabled(isLoading)
+            Text(addStatus)
         }
+        .onChange(of: addBookSuccess) {
+            if addBookSuccess {
+                isPresented = false
+            }
+        }
+        Spacer()
+    }
     private func onAddBook() async {
         let bookListService = BookListService()
         isLoading = true
@@ -168,12 +169,12 @@ struct AddView: View {
             if let token = KeychainHelper.shared.retrieve(forKey: "jwtToken") {
                 if let coverKey = book.coverKey
                 {
-                    try await bookListService.addNewBook(token: token, key: $book.id, notes: notes, status: selectedStatus, coverKey: coverKey)
+                    let _ = try await bookListService.addNewBook(token: token, key: $book.id, notes: notes, status: selectedStatus, coverKey: coverKey)
                 }
                 else {
-                    try await bookListService.addNewBook(token: token, key: $book.id, notes: notes, status: selectedStatus, coverKey: "")
+                    let _ = try await bookListService.addNewBook(token: token, key: $book.id, notes: notes, status: selectedStatus, coverKey: "")
                 }
-                try await refreshUser()
+                await refreshUser()
             }
             addBookSuccess = true
             isLoading = false

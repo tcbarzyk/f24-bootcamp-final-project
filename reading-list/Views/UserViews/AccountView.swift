@@ -32,7 +32,7 @@ struct AccountView: View {
                         .font(.system(size: 20, weight: .bold))
                         .foregroundColor(.textColor)
                     Text(unwrappedUser.email)
-                        //.background(Color.textColor)
+                    //.background(Color.textColor)
                         .foregroundColor(.textColor)
                         .cornerRadius(2)
                         .padding(.bottom, 20)
@@ -68,22 +68,21 @@ struct AccountView: View {
     }
     
     func formatDate(_ isoDateString: String) -> String {
-        // Remove the "Z" at the end of the string (it's the UTC indicator, and we can treat it as a simple time zone)
         let cleanDateString = isoDateString.replacingOccurrences(of: "Z", with: "+0000")
         
         let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"  // Specify the exact format including fractional seconds and time zone
-        formatter.timeZone = TimeZone(secondsFromGMT: 0)  // Explicitly set the time zone to GMT (UTC)
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)
         
         if let date = formatter.date(from: cleanDateString) {
             let outputFormatter = DateFormatter()
-            outputFormatter.dateFormat = "yyyy-MM-dd"  // Desired format
+            outputFormatter.dateFormat = "yyyy-MM-dd"
             return outputFormatter.string(from: date)
         } else {
             return "Invalid date"
         }
     }
-
+    
 }
 
 #Preview {

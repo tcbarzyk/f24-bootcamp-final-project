@@ -25,7 +25,7 @@ struct ListView: View {
                         ListSectionView(
                             books: Binding(
                                 get: { unwrappedUser.books.filter { $0.userInfo.status == "reading" } },
-                                set: { _ in } // This is just to satisfy the Binding requirement; modify if needed
+                                set: { _ in }
                             ),
                             title: "Reading",
                             refreshUser: refreshUser
@@ -47,7 +47,7 @@ struct ListView: View {
                         ListSectionView(
                             books: Binding(
                                 get: { unwrappedUser.books.filter { $0.userInfo.status == "to read" } },
-                                set: { _ in } // This is just to satisfy the Binding requirement; modify if needed
+                                set: { _ in }
                             ),
                             title: "To Read",
                             refreshUser: refreshUser
@@ -69,7 +69,7 @@ struct ListView: View {
                         ListSectionView(
                             books: Binding(
                                 get: { unwrappedUser.books.filter { $0.userInfo.status == "has read" } },
-                                set: { _ in } // This is just to satisfy the Binding requirement; modify if needed
+                                set: { _ in }
                             ),
                             title: "Has Read",
                             refreshUser: refreshUser

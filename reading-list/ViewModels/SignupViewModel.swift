@@ -15,13 +15,13 @@ class SignupViewModel: ObservableObject {
     
     @Published var signupStatus: String?
     @Published var success: Bool = false
-
+    
     private let signupService = SignupService()
     
     func signup() async {
         self.currentlySigningUp = true
         do {
-            let result = try await signupService.createAccount(username: username, email: email, password: password)
+            let _ = try await signupService.createAccount(username: username, email: email, password: password)
             DispatchQueue.main.async {
                 self.signupStatus = "Signup successful!"
                 self.success = true

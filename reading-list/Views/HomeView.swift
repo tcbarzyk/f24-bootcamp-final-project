@@ -19,7 +19,7 @@ struct HomeView: View {
         _user = user
         self.refreshUser = refreshUser
     }
-
+    
     var body: some View {
         ZStack {
             TabView {
@@ -30,12 +30,12 @@ struct HomeView: View {
                 ListView(user: $user, refreshUser: refreshUser)
                     .tabItem {
                         Label("List", systemImage: "text.book.closed")
-                        }
+                    }
                 AccountView(path: $path, user: $user)
                     .tabItem {
                         Label("Account", systemImage: "person.crop.circle")
                     }
-                }
+            }
         }
     }
 }

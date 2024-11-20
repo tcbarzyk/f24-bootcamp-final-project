@@ -23,7 +23,6 @@ struct SignupView: View {
                 }
                 .padding(20)
                 
-                // Signup Button
                 Button(action: {
                     Task {
                         await viewModel.signup()
@@ -42,7 +41,7 @@ struct SignupView: View {
                 
                 if viewModel.currentlySigningUp {
                     ProgressView("Processing...")
-                    .padding()
+                        .padding()
                 }
                 
                 if let status = viewModel.signupStatus {
@@ -53,7 +52,6 @@ struct SignupView: View {
                 
                 Spacer()
                 
-                // Sign-up Option
                 VStack {
                     Text("Already have an account?")
                         .foregroundColor(.white)
@@ -61,7 +59,7 @@ struct SignupView: View {
                         destination: { LoginView(path: $path) },
                         label: {
                             Text("Login")
-                            .foregroundColor(.accent)
+                                .foregroundColor(.accent)
                         }
                     )
                     .foregroundColor(.accent)
