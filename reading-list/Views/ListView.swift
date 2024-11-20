@@ -21,22 +21,6 @@ struct ListView: View {
                     NavigationLink(destination: {
                         ListSectionView(
                             books: Binding(
-                                get: { unwrappedUser.books.filter { $0.userInfo.status == "reading" } },
-                                set: { _ in }
-                            ),
-                            title: "Reading",
-                            refreshUser: refreshUser
-                        )
-                    }
-                    ) {
-                        Text("Reading")
-                            .font(.title)
-                            .frame(maxWidth: .infinity, maxHeight: 30)
-                    }
-                    .buttonStyle(.bordered)
-                    NavigationLink(destination: {
-                        ListSectionView(
-                            books: Binding(
                                 get: { unwrappedUser.books.filter { $0.userInfo.status == "to read" } },
                                 set: { _ in }
                             ),
@@ -46,6 +30,22 @@ struct ListView: View {
                     }
                     ) {
                         Text("To Read")
+                            .font(.title)
+                            .frame(maxWidth: .infinity, maxHeight: 30)
+                    }
+                    .buttonStyle(.bordered)
+                    NavigationLink(destination: {
+                        ListSectionView(
+                            books: Binding(
+                                get: { unwrappedUser.books.filter { $0.userInfo.status == "reading" } },
+                                set: { _ in }
+                            ),
+                            title: "Reading",
+                            refreshUser: refreshUser
+                        )
+                    }
+                    ) {
+                        Text("Reading")
                             .font(.title)
                             .frame(maxWidth: .infinity, maxHeight: 30)
                     }

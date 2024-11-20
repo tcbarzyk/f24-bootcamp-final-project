@@ -54,7 +54,7 @@ struct EditView: View {
     @State var editStatus: String = ""
     @State var editBookSuccess: Bool = false
     @State private var showDeleteConfirmation: Bool = false
-    let statuses = ["reading", "has read", "to read"]
+    let statuses = ["has read", "reading", "to read"]
     let baseURL = "https://covers.openlibrary.org/b/olid/"
     var refreshUser: () async -> Void
     

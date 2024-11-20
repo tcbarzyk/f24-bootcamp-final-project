@@ -96,10 +96,10 @@ struct AddView: View {
     @Binding var book: Book
     @State var isLoading: Bool = false
     @State private var notes: String = ""
-    @State private var selectedStatus: String = "to read"
+    @State private var selectedStatus: String = "reading"
     @State var addStatus: String = ""
     @State var addBookSuccess: Bool = false
-    let statuses = ["reading", "has read", "to read"]
+    let statuses = ["has read", "reading", "to read"]
     let baseURL = "https://covers.openlibrary.org/b/olid/"
     var refreshUser: () async -> Void
     
