@@ -1,6 +1,6 @@
 # Reading List
 
-This is an iOS reading list app made with Swift.
+This is an iOS reading list app made with SwiftUI.
 
 Features include:
 
