@@ -17,12 +17,9 @@ struct ListSectionView: View {
     
     var body: some View {
         ZStack {
-            LinearGradient(gradient: Gradient(colors: [Color.blue.opacity(0.6), Color.main.opacity(1)]), startPoint: .top, endPoint: .bottom)
-                .ignoresSafeArea()
             VStack {
                 Text(title)
                     .font(.system(size: 40, weight: .bold))
-                    .foregroundColor(.white)
                     .padding(.top, 10)
                 ScrollView {
                     VStack (spacing: 15) {
@@ -62,10 +59,7 @@ struct EditView: View {
     var refreshUser: () async -> Void
     
     var body: some View {
-        VStack {
-            Text("Edit Book")
-                .font(.system(size: 40, weight: .bold))
-                .padding(20)
+        VStack (alignment: .leading) {
             HStack(alignment: .top) {
                 Group {
                     if book.bookInfo.coverKey != "", let coverURL = URL(string: "\(baseURL)\(book.bookInfo.coverKey)-M.jpg") {
@@ -75,7 +69,7 @@ struct EditView: View {
                             Color.gray
                         }
                         .scaledToFit()
-                        .frame(maxHeight: 150)
+                        .frame(maxHeight: 200)
                         .overlay(
                             RoundedRectangle(cornerRadius: 5)
                                 .stroke(Color.black, lineWidth: 3)
@@ -85,29 +79,39 @@ struct EditView: View {
                         Spacer().frame(width: 20)
                     }
                 }
-                VStack(alignment: .leading) {
+                VStack (alignment: .leading) {
                     Text(book.bookInfo.title)
-                        .font(.system(size: 40, weight: .bold))
+                        .font(.title)
                         .bold()
                         .lineLimit(2)
                         .truncationMode(.tail)
                         .multilineTextAlignment(.leading)
                     Text("By: \(book.bookInfo.author.name)")
                         .bold()
+                        .lineLimit(2)
+                        .truncationMode(.tail)
+                        .multilineTextAlignment(.leading)
                 }
-                Spacer()
             }
-            .padding(10)
+            .padding(.top, 20)
+            
             if let desc = book.bookInfo.description {
                 Text(desc)
-                    .padding(.horizontal, 10)
+                    .padding(.top, 20)
+                    .lineLimit(5)
+                    .truncationMode(.tail)
+                    .multilineTextAlignment(.leading)
             }
-            TextField("Notes", text: $notes)
-                .padding()
-                .background(Color.gray.opacity(0.2))
-                .cornerRadius(8)
+            
+            Text("Notes")
+                .font(.headline)
+                .padding(.top, 20)
+            
+            TextEditor(text: $notes)
                 .frame(height: 100)
-                .padding([.leading, .trailing])
+                .scrollContentBackground(.hidden)
+                .background(.background.secondary)
+                .cornerRadius(5)
             
             Picker("Book Status", selection: $selectedStatus) {
                 ForEach(statuses, id: \.self) { status in
@@ -115,7 +119,7 @@ struct EditView: View {
                 }
             }
             .pickerStyle(SegmentedPickerStyle())
-            .padding([.leading, .trailing])
+            .padding(.top, 20)
             
             Button(action: {
                 Task {
@@ -123,30 +127,30 @@ struct EditView: View {
                 }
             }) {
                 Text("Save Changes")
-                    .font(.system(size: 18, weight: .bold))
-                    .frame(maxWidth: .infinity, maxHeight: 50)
-                    .background(Color.accentColor)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-                    .padding([.leading, .trailing, .top])
+                    .font(.title3)
+                    .bold()
+                    .frame(maxWidth: .infinity, maxHeight: 30)
             }
+            .padding(.top, 20)
+            .buttonStyle(.borderedProminent)
             .disabled(isLoading)
+            
             Button(action: {
                 showDeleteConfirmation = true
             }) {
                 Text("Remove Book")
-                    .font(.system(size: 18, weight: .bold))
-                    .frame(maxWidth: .infinity, maxHeight: 50)
-                    .background(Color.red)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-                    .padding([.leading, .trailing, .top])
+                    .font(.title3)
+                    .bold()
+                    .frame(maxWidth: .infinity, maxHeight: 30)
             }
+            .padding(.top, 20)
+            .buttonStyle(.borderedProminent)
+            .tint(.red)
             .disabled(isLoading)
-            .confirmationDialog(
+            .alert(
                 "Are you sure you want to remove this book?",
-                isPresented: $showDeleteConfirmation,
-                titleVisibility: .visible
+                isPresented: $showDeleteConfirmation
+                //titleVisibility: .visible
             ) {
                 Button("Remove", role: .destructive) {
                     Task {
@@ -155,10 +159,11 @@ struct EditView: View {
                 }
                 Button("Cancel", role: .cancel) {}
             }
+            
             Text(editStatus)
         }
+        .padding(.horizontal, 15)
         .onAppear {
-            
             notes = book.userInfo.notes
             selectedStatus = book.userInfo.status
         }
@@ -169,7 +174,6 @@ struct EditView: View {
         }
         Spacer()
     }
-    
     private func onEditBook() async {
         let bookListService = BookListService()
         isLoading = true
@@ -205,4 +209,9 @@ struct EditView: View {
             editStatus = "Edit Book Failed: \(error.localizedDescription)"
         }
     }
+}
+
+#Preview {
+    ContentView()
+        .environmentObject(AppState())
 }

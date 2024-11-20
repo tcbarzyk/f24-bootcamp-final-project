@@ -7,19 +7,29 @@ struct SignupView: View {
     
     var body: some View {
         ZStack {
-            LinearGradient(gradient: Gradient(colors: [Color.blue.opacity(0.6), Color.main.opacity(1)]), startPoint: .top, endPoint: .bottom)
-                .ignoresSafeArea()
-            
             VStack(spacing: 20) {
                 Text("Make Account")
-                    .font(.system(size: 48, weight: .bold))
-                    .foregroundColor(.textColor)
+                    .font(.system(size: 40, weight: .bold))
                     .padding(.top, 60)
                 
                 VStack(spacing: 16) {
-                    CustomTextField(placeholder: "Username", text: $viewModel.username)
-                    CustomTextField(placeholder: "Email", text: $viewModel.email)
-                    CustomTextField(placeholder: "Password", text: $viewModel.password, isSecure: true)
+                    TextField("Username", text: $viewModel.username)
+                        .textFieldStyle(.roundedBorder)
+                        .autocapitalization(.none)
+                        .disableAutocorrection(true)
+                    TextField("Email", text: $viewModel.email)
+                        .textFieldStyle(.roundedBorder)
+                        .autocapitalization(.none)
+                        .disableAutocorrection(true)
+                    SecureField("Password", text: $viewModel.password)
+                        .textFieldStyle(.roundedBorder)
+                        .onSubmit {
+                            Task {
+                                if (!viewModel.currentlySigningUp) {
+                                    await viewModel.signup()
+                                }
+                            }
+                        }
                 }
                 .padding(20)
                 
@@ -29,14 +39,10 @@ struct SignupView: View {
                     }
                 }) {
                     Text("Sign Up")
-                        .font(.system(size: 20, weight: .bold))
-                        .frame(maxWidth: .infinity, maxHeight: 50)
-                        .background(Color.accent)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                        .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
+                        .font(.title2)
+                        .bold()
                 }
-                .padding(.horizontal, 20)
+                .buttonStyle(.borderedProminent)
                 .disabled(viewModel.currentlySigningUp)
                 
                 if viewModel.currentlySigningUp {
@@ -47,22 +53,18 @@ struct SignupView: View {
                 if let status = viewModel.signupStatus {
                     Text(status)
                         .padding()
-                        .foregroundColor(.textColor)
                 }
                 
                 Spacer()
                 
                 VStack {
                     Text("Already have an account?")
-                        .foregroundColor(.white)
                     NavigationLink (
                         destination: { LoginView(path: $path) },
                         label: {
                             Text("Login")
-                                .foregroundColor(.accent)
                         }
                     )
-                    .foregroundColor(.accent)
                 }
                 .padding(.bottom, 40)
             }
@@ -78,6 +80,5 @@ struct SignupView: View {
         .navigationDestination(isPresented: $navigateToLogin) {
             LoginView(path: $path)
         }
-        .accentColor(.main)
     }
 }

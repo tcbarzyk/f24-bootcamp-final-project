@@ -21,10 +21,9 @@ struct UserBookView: View {
         }, label: {
             ZStack {
                 RoundedRectangle(cornerRadius: 15)
-                    .fill(Color.main.opacity(0.5))
-                    .frame(maxWidth: .infinity, minHeight: 120, maxHeight: 120)
+                    .fill(.background.secondary)
+                    .frame(maxWidth: .infinity, minHeight: 100, maxHeight: 100)
                     .padding(.horizontal, 10)
-                    .shadow(color: Color.black.opacity(0.3), radius: 5, x: 0, y: 2)
                 HStack {
                     Group {
                         if book.bookInfo.coverKey != "", let coverURL = URL(string: "\(baseURL)\(book.bookInfo.coverKey)-M.jpg") {
@@ -34,7 +33,7 @@ struct UserBookView: View {
                                 Color.gray
                             }
                             .scaledToFit()
-                            .frame(maxHeight: 100)
+                            .frame(maxHeight: 90)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 5)
                                     .stroke(Color.black, lineWidth: 3)
@@ -47,20 +46,22 @@ struct UserBookView: View {
                     .padding(.leading, 20)
                     VStack (alignment: .leading) {
                         Text(book.bookInfo.title)
-                            .foregroundColor(.textColor)
-                            .font(.title3)
-                            .bold()
+                            .font(.headline)
                             .lineLimit(2)
                             .truncationMode(.tail)
                             .multilineTextAlignment(.leading)
                         Text("By: \(book.bookInfo.author.name)")
-                            .foregroundColor(.textColor)
                             .bold()
+                            .lineLimit(2)
+                            .truncationMode(.tail)
+                            .multilineTextAlignment(.leading)
                     }
                     .padding(.trailing, 10)
+                    
                     Spacer()
                 }
             }
         })
+        .buttonStyle(.plain)
     }
 }

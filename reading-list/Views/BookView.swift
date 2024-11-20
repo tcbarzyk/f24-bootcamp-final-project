@@ -21,10 +21,9 @@ struct BookView: View {
         }, label: {
             ZStack {
                 RoundedRectangle(cornerRadius: 15)
-                    .fill(Color.main.opacity(0.5))
-                    .frame(maxWidth: .infinity, minHeight: 120, maxHeight: 120)
+                    .fill(.background.secondary)
+                    .frame(maxWidth: .infinity, minHeight: 100, maxHeight: 100)
                     .padding(.horizontal, 10)
-                    .shadow(color: Color.black.opacity(0.3), radius: 5, x: 0, y: 2)
                 HStack {
                     Group {
                         if let coverKey = book.coverKey, let coverURL = URL(string: "\(baseURL)\(coverKey)-M.jpg") {
@@ -34,7 +33,7 @@ struct BookView: View {
                                 Color.gray
                             }
                             .scaledToFit()
-                            .frame(maxHeight: 100)
+                            .frame(maxHeight: 90)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 5)
                                     .stroke(Color.black, lineWidth: 3)
@@ -47,15 +46,15 @@ struct BookView: View {
                     .padding(.leading, 20)
                     VStack (alignment: .leading) {
                         Text(book.title)
-                            .foregroundColor(.textColor)
-                            .font(.title3)
-                            .bold()
+                            .font(.headline)
                             .lineLimit(2)
                             .truncationMode(.tail)
                             .multilineTextAlignment(.leading)
                         Text("By: \(book.author)")
-                            .foregroundColor(.textColor)
                             .bold()
+                            .lineLimit(2)
+                            .truncationMode(.tail)
+                            .multilineTextAlignment(.leading)
                     }
                     .padding(.trailing, 10)
                     
@@ -64,12 +63,17 @@ struct BookView: View {
                     if alreadyAdded {
                         Image(systemName: "checkmark.circle")
                             .font(.title)
-                            .foregroundStyle(Color.textColor)
                             .padding(.trailing, 30)
                     }
                 }
             }
         })
+        .buttonStyle(.plain)
         .disabled(alreadyAdded)
     }
+}
+
+#Preview {
+    ContentView()
+        .environmentObject(AppState())
 }

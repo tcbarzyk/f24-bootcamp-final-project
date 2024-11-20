@@ -13,13 +13,6 @@ struct HomeView: View {
     @Binding var path: NavigationPath
     var refreshUser: () async -> Void
     
-    init(path: Binding<NavigationPath>, user: Binding<User?>, refreshUser: @escaping () async -> Void) {
-        UITabBar.appearance().unselectedItemTintColor = UIColor.lightGray
-        _path = path
-        _user = user
-        self.refreshUser = refreshUser
-    }
-    
     var body: some View {
         ZStack {
             TabView {

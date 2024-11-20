@@ -1,9 +1,5 @@
 import SwiftUI
 
-extension Color {
-    static let textColor = Color("TextColor")
-}
-
 struct LoginView: View {
     @StateObject var viewModel = LoginViewModel()
     @EnvironmentObject var appState: AppState
@@ -12,18 +8,29 @@ struct LoginView: View {
     
     var body: some View {
         ZStack {
-            LinearGradient(gradient: Gradient(colors: [Color.blue.opacity(0.6), Color.main.opacity(1)]), startPoint: .top, endPoint: .bottom)
-                .ignoresSafeArea()
-            
             VStack(spacing: 20) {
                 Text("Login")
-                    .font(.system(size: 48, weight: .bold))
-                    .foregroundColor(.white)
-                    .padding(.top, 70)
+                    .font(.system(size: 40, weight: .bold))
+                    .padding(.top, 60)
                 
                 VStack(spacing: 16) {
-                    CustomTextField(placeholder: "Username", text: $viewModel.username)
-                    CustomTextField(placeholder: "Password", text: $viewModel.password, isSecure: true)
+                    TextField("Username", text: $viewModel.username)
+                        .textFieldStyle(.roundedBorder)
+                        .autocapitalization(.none)
+                        .disableAutocorrection(true)
+                    SecureField("Password", text: $viewModel.password)
+                        .textFieldStyle(.roundedBorder)
+                        .onSubmit {
+                            Task {
+                                if (!viewModel.currentlyLoggingIn) {
+                                    await viewModel.login()
+                                    if (viewModel.loginSuccess) {
+                                        appState.isLoggedIn = true
+                                        path = NavigationPath()
+                                    }
+                                }
+                            }
+                        }
                 }
                 .padding(20)
                 
@@ -37,14 +44,10 @@ struct LoginView: View {
                     }
                 }) {
                     Text("Login")
-                        .font(.system(size: 20, weight: .bold))
-                        .frame(maxWidth: .infinity, maxHeight: 50)
-                        .background(Color.accent)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                        .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
+                        .font(.title2)
+                        .bold()
                 }
-                .padding(.horizontal, 20)
+                .buttonStyle(.borderedProminent)
                 .disabled(viewModel.currentlyLoggingIn)
                 
                 if viewModel.currentlyLoggingIn {
@@ -56,16 +59,15 @@ struct LoginView: View {
                     Text(status)
                         .padding()
                 }
+                
                 Spacer()
                 
                 VStack {
                     Text("Don't have an account?")
-                        .foregroundColor(.white)
                     NavigationLink (
                         destination: { SignupView(path: $path) },
                         label: {
                             Text("Sign up")
-                                .foregroundColor(.accent)
                         }
                     )
                 }
@@ -73,7 +75,6 @@ struct LoginView: View {
             }
             .padding(.horizontal, 20)
         }
-        .accentColor(.textColor)
     }
 }
 
@@ -91,14 +92,17 @@ struct CustomTextField: View {
             if isSecure {
                 SecureField(placeholder, text: $text)
                     .padding(.horizontal, 15)
-                    .foregroundColor(.main)
             } else {
                 TextField(placeholder, text: $text)
                     .padding(.horizontal, 15)
-                    .foregroundColor(.main)
                     .autocapitalization(.none)
                     .disableAutocorrection(true)
             }
         }
     }
+}
+
+#Preview {
+    ContentView()
+        .environmentObject(AppState())
 }

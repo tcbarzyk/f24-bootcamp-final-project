@@ -14,54 +14,41 @@ struct AccountView: View {
     
     var body: some View {
         ZStack {
-            LinearGradient(gradient: Gradient(colors: [Color.blue.opacity(0.6), Color.main.opacity(1)]), startPoint: .top, endPoint: .bottom)
-                .ignoresSafeArea()
             VStack {
                 Image(systemName: "person.crop.circle")
                     .resizable()
                     .frame(width: 200, height: 200)
-                    .foregroundColor(.textColor)
                     .padding(.bottom, 20)
                     .padding(.top, 50)
                 if let unwrappedUser = user {
                     Text(unwrappedUser.username)
-                        .font(.system(size: 48, weight: .bold))
-                        .foregroundColor(.textColor)
+                        .font(.title)
+                        .bold()
                         .padding(10)
                     Text("Email:")
-                        .font(.system(size: 20, weight: .bold))
-                        .foregroundColor(.textColor)
+                        .font(.title2)
+                        .bold()
                     Text(unwrappedUser.email)
-                    //.background(Color.textColor)
-                        .foregroundColor(.textColor)
-                        .cornerRadius(2)
+                        //.cornerRadius(2)
                         .padding(.bottom, 20)
                     Text("Member since:")
-                        .font(.system(size: 20, weight: .bold))
-                        .foregroundColor(.textColor)
+                        .font(.title2)
+                        .bold()
                     Text(formatDate(unwrappedUser.dateCreated))
-                        .foregroundColor(.textColor)
                         .padding(.bottom, 20)
                 }
                 else {
                     Text("Error getting user data")
-                        .foregroundColor(.textColor)
                 }
                 Button(action: {
                     appState.logout()
                     path = NavigationPath()
                 }) {
                     Text("Log out")
-                        .padding()
-                        .foregroundStyle(Color.textColor)
-                        .bold()
-                        .frame(maxWidth: 120, maxHeight: 50)
-                        .background(Color.accent)
-                        .cornerRadius(10)
-                        .foregroundColor(.white)
-                        .shadow(radius: 5)
                         .font(.title3)
+                        .bold()
                 }
+                .buttonStyle(.borderedProminent)
                 Spacer()
             }
         }

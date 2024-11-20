@@ -17,67 +17,43 @@ struct ContentView: View {
     var body: some View {
         NavigationStack(path: $path) {
             ZStack {
-                LinearGradient(gradient: Gradient(colors: [Color.blue.opacity(0.6), Color.main.opacity(1)]), startPoint: .top, endPoint: .bottom)
-                    .ignoresSafeArea()
-                
                 VStack {
                     Text("Reading List")
                         .font(.system(size: 60, weight: .bold))
-                        .foregroundColor(.white)
                         .padding(.top, 70)
-                        .padding(.bottom, 40)
+                        .padding(.bottom, 30)
                     if (appState.isLoggedIn && !isLoadingUser) {
                         if let unwrappedUser = user {
                             Text("Logged in as \(unwrappedUser.username)")
-                                .font(.system(size: 20, weight: .bold))
-                                .foregroundColor(.white)
+                                .font(.title)
                             NavigationLink(value: "Home") {
                                 Text("Go to Home")
-                                    .padding()
-                                    .foregroundStyle(Color.textColor)
                                     .bold()
-                                    .frame(maxWidth: 150)
-                                    .background(Color.accent)
-                                    .cornerRadius(10)
-                                    .foregroundColor(.white)
-                                    .shadow(radius: 5)
-                                    .font(.title3)
+                                    .font(.title2)
                             }
+                            .buttonStyle(.borderedProminent)
                         }
                         else {
                             Text("Failed to get user")
-                                .font(.system(size: 20, weight: .bold))
-                                .foregroundColor(.white)
+                                .font(.title)
                             Button(action: {
                                 Task {
                                     await fetchUser()
                                 }
                             }) {
                                 Text("Retry")
-                                    .padding()
-                                    .foregroundStyle(Color.textColor)
                                     .bold()
-                                    .frame(maxWidth: 150)
-                                    .background(Color.accent)
-                                    .cornerRadius(10)
-                                    .foregroundColor(.white)
-                                    .shadow(radius: 5)
-                                    .font(.title3)
+                                    .font(.title2)
                             }
+                            .buttonStyle(.borderedProminent)
                             Button(action: {
                                 appState.logout()
                             }) {
                                 Text("Logout")
-                                    .padding()
-                                    .foregroundStyle(Color.textColor)
                                     .bold()
-                                    .frame(maxWidth: 150)
-                                    .background(Color.accent)
-                                    .cornerRadius(10)
-                                    .foregroundColor(.white)
-                                    .shadow(radius: 5)
-                                    .font(.title3)
+                                    .font(.title2)
                             }
+                            .buttonStyle(.borderedProminent)
                         }
                     }
                     else if (appState.isLoggedIn && isLoadingUser) {
@@ -86,33 +62,25 @@ struct ContentView: View {
                     }
                     else {
                         Text("You are not currently logged in")
-                            .font(.system(size: 20, weight: .bold))
-                            .foregroundColor(.white)
+                            .font(.title)
                         NavigationLink(value: "Login") {
                             Text("Go to Login")
-                                .padding()
-                                .foregroundStyle(Color.textColor)
                                 .bold()
-                                .frame(maxWidth: 150)
-                                .background(Color.accent)
-                                .cornerRadius(10)
-                                .foregroundColor(.white)
-                                .shadow(radius: 5)
-                                .font(.title3)
+                                .font(.title2)
                         }
+                        .buttonStyle(.borderedProminent)
                     }
                     Spacer()
                 }
             }
             .navigationDestination(for: String.self) { value in
                 if value == "Home" {
-                    HomeView(path: $path, user: $user, refreshUser: fetchUser)
+                    HomeView(user: $user, path: $path, refreshUser: fetchUser)
                 } else if value == "Login" {
                     LoginView(path: $path)
                 }
             }
         }
-        .accentColor(.textColor)
         .onAppear {
             Task {
                 if (appState.isLoggedIn) {

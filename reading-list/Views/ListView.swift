@@ -13,12 +13,9 @@ struct ListView: View {
     
     var body: some View {
         ZStack {
-            LinearGradient(gradient: Gradient(colors: [Color.blue.opacity(0.6), Color.main.opacity(1)]), startPoint: .top, endPoint: .bottom)
-                .ignoresSafeArea()
             VStack (spacing: 25) {
                 Text("List Sections")
                     .font(.system(size: 48, weight: .bold))
-                    .foregroundColor(.white)
                     .padding(.top, 80)
                 if let unwrappedUser = user {
                     NavigationLink(destination: {
@@ -33,16 +30,10 @@ struct ListView: View {
                     }
                     ) {
                         Text("Reading")
-                            .padding()
-                            .foregroundStyle(Color.textColor)
-                            .bold()
-                            .frame(maxWidth: 150)
-                            .background(Color.accent)
-                            .cornerRadius(10)
-                            .foregroundColor(.white)
-                            .shadow(radius: 5)
-                            .font(.title2)
+                            .font(.title)
+                            .frame(maxWidth: .infinity, maxHeight: 30)
                     }
+                    .buttonStyle(.bordered)
                     NavigationLink(destination: {
                         ListSectionView(
                             books: Binding(
@@ -55,16 +46,10 @@ struct ListView: View {
                     }
                     ) {
                         Text("To Read")
-                            .padding()
-                            .foregroundStyle(Color.textColor)
-                            .bold()
-                            .frame(maxWidth: 150)
-                            .background(Color.accent)
-                            .cornerRadius(10)
-                            .foregroundColor(.white)
-                            .shadow(radius: 5)
-                            .font(.title2)
+                            .font(.title)
+                            .frame(maxWidth: .infinity, maxHeight: 30)
                     }
+                    .buttonStyle(.bordered)
                     NavigationLink(destination: {
                         ListSectionView(
                             books: Binding(
@@ -76,23 +61,17 @@ struct ListView: View {
                         )
                     } ) {
                         Text("Has Read")
-                            .padding()
-                            .foregroundStyle(Color.textColor)
-                            .bold()
-                            .frame(maxWidth: 150)
-                            .background(Color.accent)
-                            .cornerRadius(10)
-                            .foregroundColor(.white)
-                            .shadow(radius: 5)
-                            .font(.title2)
+                            .font(.title)
+                            .frame(maxWidth: .infinity, maxHeight: 30)
                     }
+                    .buttonStyle(.bordered)
                 }
                 else {
                     Text("Error getting user data")
-                        .foregroundColor(.textColor)
                 }
                 Spacer()
             }
+            .padding(.horizontal, 20)
         }
     }
 }
