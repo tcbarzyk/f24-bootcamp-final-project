@@ -13,6 +13,6 @@ Features include:
 
 ## Images
 
-![screenshot](sample-images/img1.png)
-![screenshot](sample-images/img2.png)
-![screenshot](sample-images/img3.png)
+![screenshot](sample-images/img1.PNG)
+![screenshot](sample-images/img2.PNG)
+![screenshot](sample-images/img3.PNG)
